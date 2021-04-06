@@ -32,8 +32,9 @@ function init() {
             response.data.data.forEach(function (item,index){
                 data.push(item);
             });
-            travelData(myData);
-            searchNum();
+            travelData(myData); //執行呈現風景資料
+            searchNum(); //執行收尋計數
+            donut(); //執行圓餅圖函式
         })
 }
 
@@ -47,8 +48,10 @@ function seachData() {
             myData = data;
         }
     });
+    // 重新繪製畫面
     travelData(myData);
     searchNum();
+    donut();
 }
 
 // 搜尋計數器
@@ -116,5 +119,41 @@ function clearNewData() {
     packTextArea.value = "";
 }
 
+// 圓餅圖
+function donut(){
+    // 紀錄目前各地區的資料數
+    let taipeiNum = 0;
+    let taichNum = 0;
+    let kaohNum = 0;
+    myData.forEach(function(item){
+        if(item.area === "台北"){
+           taipeiNum = taipeiNum+1; 
+        } else if (item.area === "台中"){
+            taichNum = taichNum+1;
+        } else if (item.area === "高雄"){
+            kaohNum = kaohNum+1;
+        }
+    })
+    let chart = c3.generate({
+        bindto: '#chart',
+        data: {
+          columns: [
+            ['高雄', taipeiNum],
+            ['台中', taichNum],
+            ['台北', kaohNum]
+          ],
+          type:"donut",
+          colors:{
+              "高雄":"#E68618",
+              "台中":"#5151D3",
+              "台北":"#26BFC3"
+          }
+        },
+        donut:{
+            title:"套票地區比重"
+        }
+    });
+}
 
 window.onload = init;
+
